@@ -13,7 +13,7 @@ Libraries:
 - Java Time Library
 External Tools:
 - Google Calendar API
-Future Plans:
+ ## Future Plans:
 - User Interface
 - Add Events to Calendar
 - Track Workouts
