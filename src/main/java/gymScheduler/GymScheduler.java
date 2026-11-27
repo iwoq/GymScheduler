@@ -18,11 +18,12 @@ public class GymScheduler {
         }
     }
 
-    public static ArrayList<TimeSlot> findAvailableSlots(
+    public static ArrayList<TimeSlot> findAllSlotsAndRecommend(
             ArrayList<CalendarEvent> events,
             int duration,
             String day,
-            LocalDateTime date) {
+            LocalDateTime date,
+            UserPreferences preferences) {
 
         ArrayList<TimeSlot> available = new ArrayList<>();
         //set start to midnight day 1 and end midnight the next day
@@ -72,6 +73,28 @@ public class GymScheduler {
         if (freeMinutes >= duration) {
             available.add(new TimeSlot(currentTime, end, day));
         }
-        return available;
+        //return the recomended slots using the avaliable slots
+        return recommendSlots(available, preferences);
     }
+    public static ArrayList<TimeSlot> recommendSlots(ArrayList<TimeSlot> avaliable, UserPreferences userPreferences) {
+        ArrayList<TimeSlot> recommend = new ArrayList<>();
+        //loop through all avaliable times
+        for (int i = 0; i < avaliable.size(); i++) {
+            TimeSlot slot = avaliable.get(i);
+            //get hour of the start time
+            int hour = slot.getStartTime().getHour();
+            //check if the starting hour matches user preferences
+            if (userPreferences.getPreferredWorkoutTime().equals("Morning") && hour >= 6 && hour < 12) {
+                recommend.add(slot);
+            } else if (userPreferences.getPreferredWorkoutTime().equals("Afternoon") && hour >= 12 && hour < 17) {
+                recommend.add(slot);
+            } else if (userPreferences.getPreferredWorkoutTime().equals("Evening") && hour >= 17 && hour < 22) {
+                recommend.add(slot);
+            } else if (userPreferences.getPreferredWorkoutTime().equals("Night") && (hour >= 22 || hour < 6)) {
+                recommend.add(slot);
+            }
+        }
+    return recommend;
+    }
+    
 }
